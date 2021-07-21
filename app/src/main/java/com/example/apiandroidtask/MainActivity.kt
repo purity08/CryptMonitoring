@@ -7,18 +7,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
+import com.example.apiandroidtask.DI.App
 import com.example.apiandroidtask.adapter.Adapter
 import com.example.apiandroidtask.model.RecyclerData
 import com.example.apiandroidtask.singleton.Singleton
 import com.example.apiandroidtask.viewmodel.MainActivityViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
 
     private lateinit var recyclerViewAdapter: Adapter
     private var list = arrayListOf<RecyclerData>()
 
+    @Inject
+    lateinit var viewModel: MainActivityViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        App.appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -35,13 +43,14 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
     }
 
     private fun initializeUi() {
-        val viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
-        viewModel.recyclerListData.observe(this, Observer {
-            if (it != null) {
-                list = it
-                recyclerViewAdapter.setDataList(list)
-            }
-        })
+
+        viewModel.recyclerListData()
+            .observe(this, Observer {
+                if (it != null) {
+                    list = it
+                    recyclerViewAdapter.setDataList(list)
+                }
+            })
     }
 
     override fun onItemClick(position: Int, v: View?) {

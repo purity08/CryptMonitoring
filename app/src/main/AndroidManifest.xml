@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
+        android:name=".DI.App"
         android:allowBackup="true"
         android:banner="@drawable/ic_coincap"
         android:icon="@drawable/ic_coincap"
